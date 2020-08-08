@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "granslate",
+  "version": "1.0",
+ 
+  "description": "translate on the fly.",
+ 
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["gtranslate.js"]
+    }
+  ],
+ 
+  "permissions": []
+}
