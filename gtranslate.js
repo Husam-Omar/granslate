@@ -14,9 +14,10 @@ selectedText = 'hus'
 
 
 var menu = document.createElement("menu");
-var menuItem = document.createElement("menu")
-menu.setAttribute("type", "context")
-menu.setAttribute("id", "gtranslateMenu")
+var menuItem = document.createElement("menu");
+var it=document.createElement("menuItem")
+menu.setAttribute("type", "context");
+menu.setAttribute("id", "gtranslateMenu");
 body.addEventListener('contextmenu', function(ev) {
     selectedText = getSelectedText()
     menuItem.setAttribute("label", "translate "+selectedText)
@@ -24,6 +25,7 @@ body.addEventListener('contextmenu', function(ev) {
 	trans();
 	// translate(selectedText, function(res){
 	// 	alert(res);
+	// 	it.setAttribute("label", "myLabel");
 	// });
     return false;
 }, false);
@@ -36,8 +38,8 @@ function translate(text, callback){
 	var xhttp = new XMLHttpRequest(); 
 	xhttp.onreadystatechange = function() {
 	  if (this.readyState == 4 && this.status == 200) {
-	    callback(this.responseText);
-	    // callback(JSON.parse(this.responseText)[0][0][0]);
+	    // callback(this.responseText);
+	    callback(JSON.parse(this.responseText)[0][0][0]).bind(this);
 	  }
 	};
 	xhttp.open("GET", url, true);
@@ -56,18 +58,15 @@ function trans(){
 		console.log('An error occurred');
 	}
 	xhr.open('GET', 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+getSelectedText(), true);
-	// xhr.responseType = 'document';
+	xhr.setRequestHeader("Access-Control-Allow-Origin", "https://translate.googleapis.com");             
+	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.send();
 
-	function applyResults(results){
-		var it=document.createElement("menuItem")
-		it.setAttribute("label", results);
-		menuItem.appendChild(it);
-	}
+
 
 }
 
-
-
-
-
+function applyResults(results){
+	it.setAttribute("label", results);
+	menuItem.appendChild(it);
+}

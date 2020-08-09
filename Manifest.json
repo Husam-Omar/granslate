@@ -12,5 +12,7 @@
     }
   ],
  
-  "permissions": []
+  "permissions": [
+    "*://translate.googleapis.com/*"
+  ]
 }
