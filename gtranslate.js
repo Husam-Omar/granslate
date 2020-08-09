@@ -1,72 +1,44 @@
 
 function getSelectedText() {
-    var text = "";
-    if (window.getSelection) {
-        text = window.getSelection().toString();
-    } else if (document.selection && document.selection.type != "Control") {
-        text = document.selection.createRange().text;
-    }
-    return text;
+  var text = "";
+  if (window.getSelection) {
+    text = window.getSelection().toString();
+  } else if (document.selection && document.selection.type != "Control") {
+    text = document.selection.createRange().text;
+  }
+  return text;
 }
 
-body = document.getElementsByTagName("body")[0];
-selectedText = 'hus'
-
-
+var body = document.getElementsByTagName("body")[0];
 var menu = document.createElement("menu");
-var menuItem = document.createElement("menu");
-var it=document.createElement("menuItem")
+var subMenu = document.createElement("menu");
+var menuItem=document.createElement("menuItem");
 menu.setAttribute("type", "context");
 menu.setAttribute("id", "gtranslateMenu");
+body.appendChild(menu);
+body.setAttribute("contextmenu", "gtranslateMenu");
 body.addEventListener('contextmenu', function(ev) {
-    selectedText = getSelectedText()
-    menuItem.setAttribute("label", "translate "+selectedText)
-	menu.appendChild(menuItem);
-	trans();
-	// translate(selectedText, function(res){
-	// 	alert(res);
-	// 	it.setAttribute("label", "myLabel");
-	// });
-    return false;
+  selectedText = getSelectedText();
+  subMenu.setAttribute("label", "translate '"+selectedText+"'");
+  menu.appendChild(subMenu);
+  translate(selectedText, function(res){
+    menuItem.setAttribute("label", res);
+    subMenu.appendChild(menuItem);
+  });
+  return false;
 }, false);
-body.appendChild(menu)
-body.setAttribute("contextmenu", "gtranslateMenu"); 
-
 
 function translate(text, callback){
-	var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+text;
-	var xhttp = new XMLHttpRequest(); 
-	xhttp.onreadystatechange = function() {
-	  if (this.readyState == 4 && this.status == 200) {
-	    // callback(this.responseText);
-	    callback(JSON.parse(this.responseText)[0][0][0]).bind(this);
-	  }
-	};
-	xhttp.open("GET", url, true);
-	xhttp.send();
-}
-
-function trans(){
-	let xhr = new XMLHttpRequest();
-	xhr.onload = function () {
-		let results = JSON.parse(this.responseText)[0][0][0];
-		// let results = Array.from(this.responseXML.getElementsByClassName('result')).map(result => result.getElementsByClassName('result__a')[0].href);
-		// results = results.filter((result) => !result.startsWith('https://duckduckgo.com/y.js'));
-		applyResults(results);
-	};
-	xhr.onerror = function () {
-		console.log('An error occurred');
-	}
-	xhr.open('GET', 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+getSelectedText(), true);
-	xhr.setRequestHeader("Access-Control-Allow-Origin", "https://translate.googleapis.com");             
-	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.send();
-
-
-
-}
-
-function applyResults(results){
-	it.setAttribute("label", results);
-	menuItem.appendChild(it);
+  let xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    let results = JSON.parse(this.responseText)[0][0][0];
+    callback(results);
+  };
+  xhr.onerror = function () {
+    console.log('An error occurred');
+  }
+  xhr.open('GET', 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+text, true);
+  xhr.setRequestHeader("Access-Control-Allow-Origin", "https://translate.googleapis.com");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send();
 }
