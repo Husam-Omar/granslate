@@ -9,6 +9,8 @@ function getSelectedText() {
   return text;
 }
 
+var golp = "templ";
+
 var body = document.getElementsByTagName("body")[0];
 var menu = document.createElement("menu");
 var subMenu = document.createElement("menu");
@@ -17,28 +19,48 @@ menu.setAttribute("type", "context");
 menu.setAttribute("id", "gtranslateMenu");
 body.appendChild(menu);
 body.setAttribute("contextmenu", "gtranslateMenu");
-body.addEventListener('contextmenu', function(ev) {
+
+menu.appendChild(subMenu);
+subMenu.appendChild(menuItem);
+
+
+body.addEventListener('contextmenu', (ev) => {
   selectedText = getSelectedText();
+
   subMenu.setAttribute("label", "translate '"+selectedText+"'");
-  menu.appendChild(subMenu);
-  translate(selectedText, function(res){
-    menuItem.setAttribute("label", res);
-    subMenu.appendChild(menuItem);
-  });
+  let results = translateFun(selectedText);
+  alert(results);
+
   return false;
 }, false);
 
-function translate(text, callback){
-  let xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    let results = JSON.parse(this.responseText)[0][0][0];
-    callback(results);
-  };
-  xhr.onerror = function () {
-    console.log('An error occurred');
-  }
-  xhr.open('GET', 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+text, true);
-  xhr.setRequestHeader("Access-Control-Allow-Origin", "https://translate.googleapis.com");
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send();
+async function translateFun(selectedText){
+  let results =  await translate(selectedText);
+  menuItem.setAttribute("label", results);
+
+  return results;
+}
+
+
+ function translate(text){
+   return new Promise(function(resolve, reject) {
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('GET', 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+text, true);
+      xhr.setRequestHeader("Access-Control-Allow-Origin", "https://translate.googleapis.com");
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onload = function() {
+        if (xhr.status == 200) {
+          resolve(JSON.parse(this.responseText)[0][0][0]);
+        }
+        else {
+          reject(Error(xhr.statusText));
+        }
+      };
+      xhr.onerror = function() {
+        reject(Error("Network Error"));
+      };
+      xhr.send();
+    });
 }
