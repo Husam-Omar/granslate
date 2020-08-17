@@ -9,8 +9,6 @@ function getSelectedText() {
   return text;
 }
 
-var golp = "templ";
-
 var body = document.getElementsByTagName("body")[0];
 var menu = document.createElement("menu");
 var subMenu = document.createElement("menu");
