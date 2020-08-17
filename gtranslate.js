@@ -23,12 +23,6 @@ body.setAttribute("contextmenu", "gtranslateMenu");
 menu.appendChild(subMenu);
 subMenu.appendChild(menuItem);
 
-function sleep(ms) {
-  return new Promise(
-    resolve => setTimeout(resolve, ms)
-  );
-}
-
 document.addEventListener("selectionchange", (ev) => {
   let selectedText = getSelectedText();
   var results = translateFun(selectedText);
@@ -38,7 +32,7 @@ body.addEventListener('contextmenu', (ev) => {
 
   let selectedText = getSelectedText();
   subMenu.setAttribute("label", "translate '"+selectedText+"'");
-  
+
   return false;
 }, false);
 
