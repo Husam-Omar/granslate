@@ -23,26 +23,35 @@ body.setAttribute("contextmenu", "gtranslateMenu");
 menu.appendChild(subMenu);
 subMenu.appendChild(menuItem);
 
+function sleep(ms) {
+  return new Promise(
+    resolve => setTimeout(resolve, ms)
+  );
+}
+
+document.addEventListener("selectionchange", (ev) => {
+  let selectedText = getSelectedText();
+  var results = translateFun(selectedText);
+});
 
 body.addEventListener('contextmenu', (ev) => {
-  selectedText = getSelectedText();
 
+  let selectedText = getSelectedText();
   subMenu.setAttribute("label", "translate '"+selectedText+"'");
-  let results = translateFun(selectedText);
-  alert(results);
-
+  
   return false;
 }, false);
+
 
 async function translateFun(selectedText){
   let results =  await translate(selectedText);
   menuItem.setAttribute("label", results);
-
   return results;
 }
 
 
- function translate(text){
+
+async function translate(text){
    return new Promise(function(resolve, reject) {
       var xhr = new XMLHttpRequest();
 
@@ -52,9 +61,13 @@ async function translateFun(selectedText){
 
       xhr.onload = function() {
         if (xhr.status == 200) {
+          // alert("results");
+
           resolve(JSON.parse(this.responseText)[0][0][0]);
         }
         else {
+          // alert(xhr.statusText);
+
           reject(Error(xhr.statusText));
         }
       };
