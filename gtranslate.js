@@ -21,15 +21,26 @@ body.setAttribute("contextmenu", "gtranslateMenu");
 menu.appendChild(subMenu);
 subMenu.appendChild(menuItem);
 
+var selectedText = "";
+
 document.addEventListener("selectionchange", (ev) => {
-  let selectedText = getSelectedText();
-  var results = translateFun(selectedText);
+  selectedText = getSelectedText();
 });
+
+document.addEventListener("mouseup", () => {
+  if(selectedText != ""){
+    var results = translateFun(selectedText);
+    selectedText = "";
+  }
+  selectedText = "";
+});
+
+
 
 body.addEventListener('contextmenu', (ev) => {
 
-  let selectedText = getSelectedText();
-  subMenu.setAttribute("label", "translate '"+selectedText+"'");
+  let selectedTxt = getSelectedText();
+  subMenu.setAttribute("label", "translate '"+selectedTxt+"'");
 
   return false;
 }, false);
@@ -58,7 +69,7 @@ async function translate(text){
           resolve(JSON.parse(this.responseText)[0][0][0]);
         }
         else {
-          // alert(xhr.statusText);
+          //alert(xhr.statusText);
 
           reject(Error(xhr.statusText));
         }
