@@ -23,10 +23,10 @@ subMenu.appendChild(menuItem);
 
 var selectedText = "";
 
-document.addEventListener("mouseup", () => {
+document.addEventListener("mouseup", (event) => {
   selectedText = getSelectedText();
-  
-  if(selectedText != ""){
+
+  if(selectedText != "" && event.button == 0){
     var results = translateFun(selectedText);
     selectedText = "";
   }
