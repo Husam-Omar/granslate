@@ -12,6 +12,7 @@ function getSelectedText() {
 var body = document.getElementsByTagName("body")[0];
 var menu = document.createElement("menu");
 var subMenu = document.createElement("menu");
+var openNewTapMenu = document.createElement("menuItem");
 var menuItem=document.createElement("menuItem");
 menu.setAttribute("type", "context");
 menu.setAttribute("id", "gtranslateMenu");
@@ -20,6 +21,11 @@ body.setAttribute("contextmenu", "gtranslateMenu");
 
 menu.appendChild(subMenu);
 subMenu.appendChild(menuItem);
+
+
+menu.appendChild(openNewTapMenu);
+
+openNewTapMenu.setAttribute("label", "translate in new tab");
 
 var selectedText = "";
 
@@ -33,9 +39,23 @@ document.addEventListener("mouseup", (event) => {
   selectedText = "";
 });
 
+openNewTapMenu.addEventListener("click", (ev) => {
+	selectedText = getSelectedText();
+	if(ev.button == 0 && selectedText != ""){
+		var url = "https://translate.google.com/?sl=en&tl=ar&text=" + selectedText;
+		var win = window.open(url, '_blank');
+		win.focus();	
+	}
+});
+
+    
+	  
+
 
 
 body.addEventListener('contextmenu', (ev) => {
+
+
 
   let selectedTxt = getSelectedText();
   subMenu.setAttribute("label", "translate '"+selectedTxt+"'");
