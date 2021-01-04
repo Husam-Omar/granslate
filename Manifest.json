@@ -2,16 +2,17 @@
   "manifest_version": 2,
   "name": "granslate",
   "version": "1.3",
- 
   "description": "translate on the fly.",
- 
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["granslate.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "granslate.js"
+      ]
     }
   ],
- 
   "permissions": [
     "*://translate.googleapis.com/*"
   ]
