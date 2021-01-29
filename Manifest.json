@@ -4,6 +4,7 @@
     "version": "2.0",
     "description": "translate on the fly.",
     "homepage_url": "https://github.com/Husam-Omar/granslate",
+    "author": "Icon made by Freepik from www.flaticon.com",
     "permissions": [
         "*://translate.googleapis.com/*",
         "*://*/*",
