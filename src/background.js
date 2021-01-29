@@ -25,6 +25,15 @@ browser.contextMenus.onShown.addListener(async function (info, tab) {
 
 });
 
+browser.contextMenus.onClicked.addListener((info, tab) => {
+    var selectedText = info.selectionText;
+    if (info.menuItemId === granslateMenuId) {
+        browser.tabs.create({
+            index: tab.index + 1,
+            url: "https://translate.google.com/?sl=auto&tl=ar&text=" + selectedText
+        })
+    }
+});
 
 async function translate(text) {
     return new Promise(function (resolve, reject) {
